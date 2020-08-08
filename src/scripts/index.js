@@ -1,11 +1,12 @@
 import "../styles/index.css";
+const API_KEY = "38ddf37bfae355c6d8c4d5a34912fe03";
 
-const API_KEY = "24155ba8ca7b4e48b173251f93ff2bc2";
 
 const getElemById = id => document.getElementById(id);
 let articleContainerElem = getElemById("news-articles");
 
 const renderNews = news => {
+  console.log(news.articles);
   if (news.articles.length) {
     const { articles } = news;
     console.log(articles);
@@ -13,18 +14,14 @@ const renderNews = news => {
     let articleListElem = "";
 
     articles.forEach(article => {
-      const { author, description, title, urlToImage, url } = article;
-
+      const { title, url } = article;
+      const author = (article.source.name);
       articleListElem += `
 		    <li class="article">
-		      <div class="article-img-wrap">
-            <img class="article-img" src="${urlToImage}" alt="${title}" />
-          </div>
+		      
 
 		      <h2 class="article-title">${title}</h2>
 
-		      <p class="article-description">${description ||
-            "Description not available"}</p>
 
 		      <span class="article-author">- ${author ? author : "Anon"}</span>
 
@@ -44,8 +41,8 @@ const renderNews = news => {
 const getNews = async (searchText = "") => {
   articleContainerElem.innerHTML = '<li class="loading">Loading....</li>';
   const url = searchText
-    ? `https://newsapi.org/v2/everything?q=${searchText}&apiKey=${API_KEY}`
-    : `https://newsapi.org/v2/top-headlines?country=in&apiKey=${API_KEY}`;
+    ? `https://gnews.io/api/v3/search?q=${searchText}&token=${API_KEY}`
+    : `https://gnews.io/api/v3/top-news?token=${API_KEY}&country=in`;
 
   const newsResponse = await fetch(url);
   const news = await newsResponse.json();
